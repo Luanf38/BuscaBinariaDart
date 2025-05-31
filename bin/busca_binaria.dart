@@ -1,19 +1,20 @@
-import 'dart:io';
+import 'dart:math';
 
 void main() {
-  List<int> minhaLista = List.generate(1000000001, (val) => val);
+  List<Usuario> minhaLista = List.generate(100000001, (val) => Usuario(val, "Luan", "012345678910", true));
 
-  int inputNumber = getNUmber();
+  Usuario usuario = Usuario(100000000, "Luan", "012345678910", true);
 
+  print(usuario.id);
 
-  int? indexBuscaSimples = getIndexBuscaSimples(minhaLista, inputNumber);
+  int? indexBuscaSimples = getIndexBuscaSimples(minhaLista, usuario);
 
   if (indexBuscaSimples != null) {
     print("A posição do seu item na lista é $indexBuscaSimples");
   } else {
     print("Item não encontrado");
   }
-  int? index2 = getIndexBUscaBinaria(minhaLista, inputNumber);
+  int? index2 = getIndexBUscaBinaria(minhaLista, usuario);
 
   if (index2 != null) {
     print("A posição do seu item na lista é $index2");
@@ -22,22 +23,7 @@ void main() {
   }
 }
 
-int getNUmber() {
-  while (true) {
-    print("Digite um número de 0 a 1000000000");
-    try {
-      String? input = stdin.readLineSync();
-      int? number = int.tryParse(input ?? "");
-      if (number != null && number >= 0 && number <= 1000000000) {
-        return number;
-      }
-    } catch (e) {
-      continue;
-    }
-  }
-}
-
-int? getIndexBUscaBinaria(List<int> list, int value) {
+int? getIndexBUscaBinaria(List<Usuario> list, Usuario value) {
   final stopwatch = Stopwatch();
   stopwatch.start();
   int lower = 0;
@@ -45,32 +31,41 @@ int? getIndexBUscaBinaria(List<int> list, int value) {
   while (lower <= higher) {
     int meio = ((lower + higher) / 2).toInt();
     
-    int palpite = list[meio];
+    Usuario palpite = list[meio];
 
-    if (palpite == value) {
-      print("Tempo Busca Binaria: ${stopwatch.elapsed.inSeconds}");
+    if (palpite.id == value.id) {
+      print("Tempo Busca Binaria: ${stopwatch.elapsedMicroseconds}");
       return meio;
     }
 
-    if(palpite > value) {
+    if(palpite.id > value.id) {
       higher = meio -1;
     } else {
       lower = meio + 1;
     }
   }
-  print("Tempo Busca Binaria: ${stopwatch.elapsed.inSeconds}");
+  print("Tempo Busca Binaria: ${stopwatch.elapsedMicroseconds}");
   return null;
 }
 
-int? getIndexBuscaSimples(List<int> list, int value) {
+int? getIndexBuscaSimples(List<Usuario> list, Usuario value) {
   final stopwatch = Stopwatch();
   stopwatch.start();
   for (int c = 0; c < list.length; c++)  {
-    if (list[c] == value) {
-      print("Tempo Busca Simples: ${stopwatch.elapsed.inSeconds}");
+    if (list[c].id == value.id) {
+      print("Tempo Busca Simples: ${stopwatch.elapsedMicroseconds}");
       return c;
     }
   }
-  print("Tempo Busca Simples: ${stopwatch.elapsed.inSeconds}");
+  print("Tempo Busca Simples: ${stopwatch.elapsedMicroseconds}");
   return null;
+}
+
+class Usuario {
+  Usuario(this.id, this.nome, this.cpf, this.isAtivo);
+
+  final int id;
+  final String nome;
+  final String cpf;
+  final bool isAtivo;
 }
