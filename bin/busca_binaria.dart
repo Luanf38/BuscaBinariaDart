@@ -1,20 +1,32 @@
 import 'dart:math';
 
 void main() {
-  List<Usuario> minhaLista = List.generate(100000001, (val) => Usuario(val, "Luan", "012345678910", true));
+  List<String> minhaLista = List.generate(99999999, (val) => "name$val");
 
-  Usuario usuario = Usuario(100000000, "Luan", "012345678910", true);
+  int number = 99999998;
 
-  print(usuario.id);
+  String usuario = "name$number";
+
+  final stopwatch = Stopwatch();
+  stopwatch.start();
 
   int? indexBuscaSimples = getIndexBuscaSimples(minhaLista, usuario);
+
+  print("Tempo Busca Simples: ${stopwatch.elapsedMicroseconds}");
 
   if (indexBuscaSimples != null) {
     print("A posição do seu item na lista é $indexBuscaSimples");
   } else {
     print("Item não encontrado");
   }
+
+  stopwatch.stop();
+  stopwatch.reset();
+  stopwatch.start();
+
   int? index2 = getIndexBUscaBinaria(minhaLista, usuario);
+
+  print("Tempo Busca Binaria: ${stopwatch.elapsedMicroseconds}");
 
   if (index2 != null) {
     print("A posição do seu item na lista é $index2");
@@ -23,49 +35,36 @@ void main() {
   }
 }
 
-int? getIndexBUscaBinaria(List<Usuario> list, Usuario value) {
-  final stopwatch = Stopwatch();
-  stopwatch.start();
+int? getIndexBUscaBinaria(List<String> list, String value) {
+  
   int lower = 0;
   int higher = list.length - 1;
   while (lower <= higher) {
     int meio = ((lower + higher) / 2).toInt();
     
-    Usuario palpite = list[meio];
+    String palpite = list[meio];
 
-    if (palpite.id == value.id) {
-      print("Tempo Busca Binaria: ${stopwatch.elapsedMicroseconds}");
+    if (palpite == value) {
+      
       return meio;
     }
 
-    if(palpite.id > value.id) {
+    if(palpite.compareTo(value) > 0) {
       higher = meio -1;
     } else {
       lower = meio + 1;
     }
   }
-  print("Tempo Busca Binaria: ${stopwatch.elapsedMicroseconds}");
   return null;
 }
 
-int? getIndexBuscaSimples(List<Usuario> list, Usuario value) {
-  final stopwatch = Stopwatch();
-  stopwatch.start();
+int? getIndexBuscaSimples(List<String> list, String value) {
   for (int c = 0; c < list.length; c++)  {
-    if (list[c].id == value.id) {
-      print("Tempo Busca Simples: ${stopwatch.elapsedMicroseconds}");
+    if (list[c] == value) {
+      
       return c;
     }
   }
-  print("Tempo Busca Simples: ${stopwatch.elapsedMicroseconds}");
   return null;
 }
 
-class Usuario {
-  Usuario(this.id, this.nome, this.cpf, this.isAtivo);
-
-  final int id;
-  final String nome;
-  final String cpf;
-  final bool isAtivo;
-}
